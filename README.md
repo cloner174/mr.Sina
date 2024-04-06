@@ -213,6 +213,9 @@ Visualizes the graph using the specified layout parameters.
     NetworkX functionality within this class primarily supports undirected graphs.
     Visualization parameters can be customized as needed.
 
+
+# Mistakes and Corrections
+To err is human, and nobody likes a perfect person! If you come across any mistakes or if you have questions, feel free to raise an issue or submit a pull request. Your contributions to improving the content are highly appreciated.
 # Contact
     GitHub: github.com/cloner174
     Email: cloner174.org@gmail.com
