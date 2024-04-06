@@ -155,6 +155,7 @@ class DataHandle:
             raise KeyError( "\n there is no ID for nodes in data. Pass the id_laybel to node_id_laybel arguman of this Function !")
     
     def initial_data(self, 
+                     need_nodes : bool = False,
                      edge_laybels : tuple = None , 
                      node_id_laybel : str = None,
                      advertiser_nodes : list = None ,
@@ -197,6 +198,8 @@ class DataHandle:
                 pass
         else:
             raise ValueError( " Please pass the publisher_nodes to this Function Manually !!! IT MUST BE of TYPE List !!!")            
+        if need_nodes == True :
+            return self.advertiser_nodes, self.publisher_nodes
     
     def modify_links(self, 
                      len_of_sources_and_targets : int = None ,

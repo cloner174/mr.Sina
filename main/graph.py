@@ -57,70 +57,100 @@ class Graph :
                   layer_one_links : list,
                   layer_two_links : list,
                   Interconnected_links : list,
+                  layer_one_nodes : list = None,
+                  layer_two_nodes : list = None,
                   nx_use = False,
+                  just_interconnect_for_nx_graph : bool = False,
                   G = None):
         if G is not None :
             g = G
         else:
             if nx_use == True :
-                import pandas as pd
-                layer_one_node = []
-                for i in layer_one_links:
-                    if i[0] not in  layer_one_node :
-                        layer_one_node.append(i[0])
-                        continue
-                    if i[1] not in layer_one_node :
-                        layer_one_node.append(i[1])
-                        continue
-                layer_two_node = []                
-                for i in layer_two_links:
-                    if i[0] not in layer_two_node :
-                        layer_two_node.append(i[0])
-                        continue
-                    if i[1] not in layer_two_node :
-                        layer_two_node.append(i[1])
-                        continue
-                for i in Interconnected_links :
-                    if i[0] not in layer_one_node :
-                        layer_one_node.append(i[0])
-                        continue
-                    if i[1] not in layer_one_node :
-                        layer_one_node.append(i[1])
-                        continue
-                    if i[0] not in layer_two_node :
-                        layer_two_node.append(i[0])
-                        continue
-                    if i[1] not in layer_two_node :
-                        layer_two_node.append(i[1])
-                        continue
-                    interconnected_nodes = layer_one_node.copy()
-                    for i in layer_two_node :
-                        if i not in interconnected_nodes:
-                            interconnected_nodes.append(i)
-                layer_one_nodes = pd.Series(layer_one_node).unique()
-                layer_two_nodes = pd.Series(layer_two_node).unique()
-                layer_one_g = nx.Graph()
-                layer_two_g = nx.Graph()
-                interconnected_g = nx.Graph()
-                layer_one_g = self.add_node( G = layer_one_g , nodes_to_add = layer_one_nodes )
-                layer_two_g = self.add_node( G = layer_two_g , nodes_to_add = layer_two_nodes )
-                interconnected_g = self.add_node( G = interconnected_g , nodes_to_add = interconnected_nodes )
+                if layer_one_nodes is not None :
+                    if layer_two_nodes is not None :
+                        interconnected_nodes = layer_one_nodes.copy()
+                        for i in layer_two_nodes :
+                            if i not in interconnected_nodes:
+                                interconnected_nodes.append(i)
+                        interconnected_g = nx.Graph()
+                        interconnected_g = self.add_node( G = interconnected_g , nodes_to_add = interconnected_nodes )
+                        if just_interconnect_for_nx_graph == True :
+                            pass
+                        else:
+                            layer_one_g = nx.Graph()
+                            layer_two_g = nx.Graph()
+                            layer_one_g = self.add_node( G = layer_one_g , nodes_to_add = layer_one_nodes )
+                            layer_two_g = self.add_node( G = layer_two_g , nodes_to_add = layer_two_nodes )
+                    else:
+                        pass
+                else:
+                    import pandas as pd
+                    layer_one_node_temp = []
+                    for i in layer_one_links:
+                        if i[0] not in  layer_one_node_temp :
+                            layer_one_node_temp.append(i[0])
+                            continue
+                        if i[1] not in layer_one_node_temp :
+                            layer_one_node_temp.append(i[1])
+                            continue
+                    layer_two_node_temp = []                
+                    for i in layer_two_links:
+                        if i[0] not in layer_two_node_temp :
+                            layer_two_node_temp.append(i[0])
+                            continue
+                        if i[1] not in layer_two_node_temp :
+                            layer_two_node_temp.append(i[1])
+                            continue
+                    for i in Interconnected_links :
+                        if i[0] not in layer_one_node_temp :
+                            layer_one_node_temp.append(i[0])
+                            continue
+                        if i[1] not in layer_one_node_temp :
+                            layer_one_node_temp.append(i[1])
+                            continue
+                        if i[0] not in layer_two_node_temp :
+                            layer_two_node_temp.append(i[0])
+                            continue
+                        if i[1] not in layer_two_node_temp :
+                            layer_two_node_temp.append(i[1])
+                            continue
+                        interconnected_nodes = layer_one_node_temp.copy()
+                        for i in layer_two_node_temp :
+                            if i not in interconnected_nodes:
+                                interconnected_nodes.append(i)
+                    interconnected_g = nx.Graph()
+                    interconnected_g = self.add_node( G = interconnected_g , nodes_to_add = interconnected_nodes )
+                    if just_interconnect_for_nx_graph == True :
+                        pass
+                    else:
+                        layer_one_node = pd.Series(layer_one_node_temp).unique()
+                        layer_two_node = pd.Series(layer_two_node_temp).unique()
+                        layer_one_g = nx.Graph()
+                        layer_two_g = nx.Graph()
+                        layer_one_g = self.add_node( G = layer_one_g , nodes_to_add = layer_one_node )
+                        layer_two_g = self.add_node( G = layer_two_g , nodes_to_add = layer_two_node ) 
             else:
                 g = self.create()
         for edge in layer_one_links:
             edgeSource = edge[0]
             edgeTarget = edge[1]
             if nx_use == True :
-                layer_one_g.add_edge(edgeSource, edgeTarget)
                 interconnected_g.add_edge(edgeSource, edgeTarget)
+                if just_interconnect_for_nx_graph == True :
+                    pass
+                else:
+                    layer_one_g.add_edge(edgeSource, edgeTarget)
             else:
                 g[ edgeSource, edgeTarget, self.layer_one_name , self.layer_one_name ] = 1
         for edge in layer_two_links:
             edgeSource = edge[0]
             edgeTarget = edge[1]
             if nx_use == True :
-                layer_two_g.add_edge(edgeSource, edgeTarget)
                 interconnected_g.add_edge(edgeSource, edgeTarget)
+                if just_interconnect_for_nx_graph == True :
+                    pass
+                else:
+                    layer_two_g.add_edge(edgeSource, edgeTarget)
             else:
                 g[ edgeSource, edgeTarget, self.layer_two_name, self.layer_two_name ] = 1
         for edge in Interconnected_links:
@@ -131,7 +161,10 @@ class Graph :
             else:
                 g[edgeSource, edgeTarget, self.layer_one_name, self.layer_two_name ] = 1        
         if nx_use == True :
-            return layer_one_g, layer_two_g, interconnected_g
+            if just_interconnect_for_nx_graph == True :
+                return interconnected_g
+            else:
+                return layer_one_g, layer_two_g, interconnected_g
         else:
             return g
     
