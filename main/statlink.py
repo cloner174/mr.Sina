@@ -10,47 +10,50 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, roc_auc_score, roc_curve
 
 class LinkPrediction:
-    def __init__(self, graph):
-        self.graph = graph
-        
-    def common_neighbors(self, node1, node2):
-        neighbors1 = set(self.graph[node1])
-        neighbors2 = set(self.graph[node2])
+    @staticmethod
+    def common_neighbors(graph, node1, node2):
+        neighbors1 = set(graph[node1])
+        neighbors2 = set(graph[node2])
         return len(neighbors1.intersection(neighbors2))
-    
-    def adamic_adar(self, node1, node2):
-        neighbors1 = set(self.graph[node1])
-        neighbors2 = set(self.graph[node2])
+
+    @staticmethod
+    def adamic_adar(graph, node1, node2):
+        neighbors1 = set(graph[node1])
+        neighbors2 = set(graph[node2])
         common_neighbors = neighbors1.intersection(neighbors2)
         score = 0
         for neighbor in common_neighbors:
-            degree = len(self.graph[neighbor])
+            degree = len(graph[neighbor])
             score += 1 / np.log(degree) if degree > 1 else 0
         return score
-    
-    def resource_allocation(self, node1, node2):
-        neighbors1 = set(self.graph[node1])
-        neighbors2 = set(self.graph[node2])
+
+    @staticmethod
+    def resource_allocation(graph, node1, node2):
+        neighbors1 = set(graph[node1])
+        neighbors2 = set(graph[node2])
         common_neighbors = neighbors1.intersection(neighbors2)
         score = 0
         for neighbor in common_neighbors:
-            degree = len(self.graph[neighbor])
+            degree = len(graph[neighbor])
             score += 1 / degree if degree > 0 else 0
         return score
-    
-    def preferred_attachment(self, node1, node2):
-        return len(self.graph[node1]) * len(self.graph[node2])
-    
-    def jaccard_coefficient(self, node1, node2):
-        neighbors1 = set(self.graph[node1])
-        neighbors2 = set(self.graph[node2])
+
+    @staticmethod
+    def preferred_attachment(graph, node1, node2):
+        return len(graph[node1]) * len(graph[node2])
+
+    @staticmethod
+    def jaccard_coefficient(graph, node1, node2):
+        neighbors1 = set(graph[node1])
+        neighbors2 = set(graph[node2])
         intersection = len(neighbors1.intersection(neighbors2))
         union = len(neighbors1.union(neighbors2))
         return intersection / union if union != 0 else 0
-    
-    def cosine_similarity(self, node1, node2):
-        neighbors1 = set(self.graph[node1])
-        neighbors2 = set(self.graph[node2])
+
+    @staticmethod
+    def cosine_similarity(graph, node1, node2):
+        neighbors1 = set(graph[node1])
+        neighbors2 = set(graph[node2])
         intersection = len(neighbors1 & neighbors2)
         norm1 = np.sqrt(len(neighbors1))
         norm2 = np.sqrt(len(neighbors2))
@@ -58,8 +61,9 @@ class LinkPrediction:
             return 0
         else:
             return intersection / (norm1 * norm2)
-    
-    def evaluate_model(self, X_train, X_test, y_train, y_test, model):
+
+    @staticmethod
+    def evaluate_model(X_train, X_test, y_train, y_test, model):
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
@@ -76,23 +80,21 @@ class LinkPrediction:
         print(f" thresholds : {thresholds}")
         print(f"ROC AUC of {model.__class__.__name__}: {roc_auc:.2f}")
         print(f"Accuracy of {model.__class__.__name__}: {accuracy:.2f}")
-    
-    def train_model(self, 
-                    methods=['common_neighbors' , 'adamic_adar' ,
-                             'resource_allocation', 'preferred_attachment',
-                             'jaccard_coefficient', 'cosine_similarity']):
+
+    @staticmethod
+    def train_model(graph, methods=['common_neighbors', 'adamic_adar',
+                                    'resource_allocation', 'preferred_attachment',
+                                    'jaccard_coefficient', 'cosine_similarity']):
         
         X, y = [], []
-        for node1 in self.graph:
-            for node2 in self.graph:
+        for node1 in graph:
+            for node2 in graph:
                 if node1 != node2:
                     features = []
                     for method in methods:
-                        features.append(getattr(self, method)(node1, node2))
+                        features.append(getattr(LinkPrediction, method)(graph, node1, node2))
                     X.append(features)
-                    y.append(1 if node2 in self.graph[node1] else 0)
+                    y.append(1 if node2 in graph[node1] else 0)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         model = LogisticRegression()
-        self.evaluate_model(X_train, X_test, y_train, y_test, model)
-
-#end#
+        LinkPrediction.evaluate_model(X_train, X_test, y_train, y_test, model)
