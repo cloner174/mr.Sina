@@ -3,21 +3,25 @@
 #GitHub.com/cloner174
 #cloner174.org@gmail.com
 #
-from pymnet import MultilayerNetwork, draw
 from time import sleep
 import networkx as nx
 
 class Graph :
-    def __init__( self, layer_one_name : str, layer_two_name : str ) :
+    def __init__( self, layer_one_name : str, layer_two_name : str , nx_use : bool = False ) :
         self.layer_one_name = layer_one_name
         self.layer_two_name = layer_two_name
+        self.nx_use = nx_use
+        if nx_use:
+            pass
+        else:
+            from pymnet import MultilayerNetwork, draw
     
-    def create( self, Aspects = 1, fully_Interconnect = False, of_type_nx = False ) :
+    def create( self, Aspects = 1, fully_Interconnect = False ) :
         print( " Starting to Create Graph . . . ")
         sleep(1)
         print( " The default values for aspects, fullyInterconnected and nx_use arguments are 1 and False. " )
         sleep(1)
-        if of_type_nx == True :
+        if self.nx_use:
             print( "You choosed a Network of type NetWorkX Graph Creation !")
             sleep(1)
             G = nx.Graph()
@@ -41,7 +45,7 @@ class Graph :
                  nodes_to_add : list,
                  nx_use = True ,
                  G = None):
-        if nx_use == False:
+        if self.nx_use == False:
             print(" Not Implantted Yet ! no need actully ! use add_links method instead !")
             return
         else:
@@ -59,13 +63,12 @@ class Graph :
                   Interconnected_links : list,
                   layer_one_nodes : list = None,
                   layer_two_nodes : list = None,
-                  nx_use = False,
                   just_interconnect_for_nx_graph : bool = False,
                   G = None):
         if G is not None :
             g = G
         else:
-            if nx_use == True :
+            if self.nx_use :
                 if layer_one_nodes is not None :
                     if layer_two_nodes is not None :
                         interconnected_nodes = layer_one_nodes.copy()
@@ -134,7 +137,7 @@ class Graph :
         for edge in layer_one_links:
             edgeSource = edge[0]
             edgeTarget = edge[1]
-            if nx_use == True :
+            if self.nx_use == True :
                 interconnected_g.add_edge(edgeSource, edgeTarget)
                 if just_interconnect_for_nx_graph == True :
                     pass
@@ -145,7 +148,7 @@ class Graph :
         for edge in layer_two_links:
             edgeSource = edge[0]
             edgeTarget = edge[1]
-            if nx_use == True :
+            if self.nx_use == True :
                 interconnected_g.add_edge(edgeSource, edgeTarget)
                 if just_interconnect_for_nx_graph == True :
                     pass
@@ -156,11 +159,11 @@ class Graph :
         for edge in Interconnected_links:
             edgeSource = edge[0]
             edgeTarget = edge[1]
-            if nx_use == True :
+            if self.nx_use == True :
                 interconnected_g.add_edge(edgeSource, edgeTarget)
             else:
                 g[edgeSource, edgeTarget, self.layer_one_name, self.layer_two_name ] = 1        
-        if nx_use == True :
+        if self.nx_use == True :
             if just_interconnect_for_nx_graph == True :
                 return interconnected_g
             else:
@@ -169,6 +172,9 @@ class Graph :
             return g
     
     def show(self, G, return_Graph_object = False ):
+        if self.nx_use:
+            print( "Not Implanted yet! use networkx docs " )
+            return False
         print(" starting to show !")
         sleep(1)
         print(" this may take a few while ")
