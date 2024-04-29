@@ -1,1 +1,1 @@
-#main Package
+from .data import DataHandle
