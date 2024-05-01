@@ -64,6 +64,7 @@ class Graph :
                   layer_one_nodes : list = None,
                   layer_two_nodes : list = None,
                   just_interconnect_for_nx_graph : bool = False,
+                  combine_layer_one_with_layer_two_edges_with_no_between : bool = False,
                   G = None):
         if G is not None :
             g = G
@@ -160,11 +161,16 @@ class Graph :
             edgeSource = edge[0]
             edgeTarget = edge[1]
             if self.nx_use == True :
+                if combine_layer_one_with_layer_two_edges_with_no_between :
+                    combine_with_no_between_g = interconnected_g.copy()
+                    pass
                 interconnected_g.add_edge(edgeSource, edgeTarget)
             else:
                 g[edgeSource, edgeTarget, self.layer_one_name, self.layer_two_name ] = 1        
         if self.nx_use == True :
-            if just_interconnect_for_nx_graph == True :
+            if combine_layer_one_with_layer_two_edges_with_no_between :
+                return combine_with_no_between_g
+            elif just_interconnect_for_nx_graph == True :
                 return interconnected_g
             else:
                 return layer_one_g, layer_two_g, interconnected_g
