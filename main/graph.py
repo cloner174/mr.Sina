@@ -78,7 +78,7 @@ class Graph :
                                 interconnected_nodes.append(i)
                         interconnected_g = nx.Graph()
                         interconnected_g = self.add_node( G = interconnected_g , nodes_to_add = interconnected_nodes )
-                        if just_interconnect_for_nx_graph == True :
+                        if just_interconnect_for_nx_graph or combine_layer_one_with_layer_two_edges_with_no_between :
                             pass
                         else:
                             layer_one_g = nx.Graph()
@@ -124,7 +124,7 @@ class Graph :
                                 interconnected_nodes.append(i)
                     interconnected_g = nx.Graph()
                     interconnected_g = self.add_node( G = interconnected_g , nodes_to_add = interconnected_nodes )
-                    if just_interconnect_for_nx_graph == True :
+                    if just_interconnect_for_nx_graph or combine_layer_one_with_layer_two_edges_with_no_between:
                         pass
                     else:
                         layer_one_node = pd.Series(layer_one_node_temp).unique()
@@ -140,7 +140,7 @@ class Graph :
             edgeTarget = edge[1]
             if self.nx_use == True :
                 interconnected_g.add_edge(edgeSource, edgeTarget)
-                if just_interconnect_for_nx_graph == True :
+                if just_interconnect_for_nx_graph or combine_layer_one_with_layer_two_edges_with_no_between:
                     pass
                 else:
                     layer_one_g.add_edge(edgeSource, edgeTarget)
@@ -151,7 +151,7 @@ class Graph :
             edgeTarget = edge[1]
             if self.nx_use == True :
                 interconnected_g.add_edge(edgeSource, edgeTarget)
-                if just_interconnect_for_nx_graph == True :
+                if just_interconnect_for_nx_graph or combine_layer_one_with_layer_two_edges_with_no_between :
                     pass
                 else:
                     layer_two_g.add_edge(edgeSource, edgeTarget)
