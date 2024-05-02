@@ -15,6 +15,8 @@ class Graph :
             pass
         else:
             from pymnet import MultilayerNetwork, draw
+            self.MultilayerNetwork = MultilayerNetwork
+            self.draw = draw
     
     def create( self, Aspects = 1, fully_Interconnect = False ) :
         print( " Starting to Create Graph . . . ")
