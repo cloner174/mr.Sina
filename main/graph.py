@@ -30,7 +30,7 @@ class Graph :
             print( "Successfully Create The Graph Object !")
             sleep(1)
             return G
-        g = MultilayerNetwork( aspects = Aspects, fullyInterconnected = fully_Interconnect )
+        g = self.MultilayerNetwork( aspects = Aspects, fullyInterconnected = fully_Interconnect )
         print( "Successfully Create The Graph Object !")
         sleep(1)
         print( " Adding layers . . . ")
