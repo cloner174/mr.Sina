@@ -165,7 +165,7 @@ class Graph :
             if self.nx_use == True :
                 if combine_layer_one_with_layer_two_edges_with_no_between :
                     combine_with_no_between_g = interconnected_g.copy()
-                    pass
+                    continue
                 interconnected_g.add_edge(edgeSource, edgeTarget)
             else:
                 g[edgeSource, edgeTarget, self.layer_one_name, self.layer_two_name ] = 1        
@@ -188,7 +188,7 @@ class Graph :
         print(" this may take a few while ")
         sleep(1)
         print( " the defult value for return_Graph_object is False ")
-        draw(G, layout = 'fr',layergap=2.5, layershape= 'circle',
+        self.draw(G, layout = 'fr',layergap=2.5, layershape= 'circle',
                  nodeLabelRule = {} , show = True , alignedNodes = False, layerPadding = 0.1 )
         if return_Graph_object == True :
             return G
