@@ -44,9 +44,8 @@ class Graph :
         return g
     
     def add_node(self,
-                 nodes_to_add : list,
-                 nx_use = True ,
-                 G = None):
+                    nodes_to_add : list,
+                    G = None):
         if self.nx_use == False:
             print(" Not Implantted Yet ! no need actully ! use add_links method instead !")
             return
@@ -60,14 +59,14 @@ class Graph :
         return G
     
     def add_links(self,
-                  layer_one_links : list,
-                  layer_two_links : list,
-                  Interconnected_links : list,
-                  layer_one_nodes : list = None,
-                  layer_two_nodes : list = None,
-                  just_interconnect_for_nx_graph : bool = False,
-                  combine_layer_one_with_layer_two_edges_with_no_between : bool = False,
-                  G = None):
+                    layer_one_links : list,
+                    layer_two_links : list,
+                    Interconnected_links : list,
+                    layer_one_nodes : list = None,
+                    layer_two_nodes : list = None,
+                    just_interconnect_for_nx_graph : bool = False,
+                    combine_layers_no_self_layer : bool = False,
+                    G = None):
         if G is not None :
             g = G
         else:
@@ -79,8 +78,10 @@ class Graph :
                             if i not in interconnected_nodes:
                                 interconnected_nodes.append(i)
                         interconnected_g = nx.Graph()
+                        combined_g = nx.Graph()
                         interconnected_g = self.add_node( G = interconnected_g , nodes_to_add = interconnected_nodes )
-                        if just_interconnect_for_nx_graph or combine_layer_one_with_layer_two_edges_with_no_between :
+                        combined_g =  self.add_node( G = combined_g , nodes_to_add = interconnected_nodes )
+                        if just_interconnect_for_nx_graph or combine_layers_no_self_layer :
                             pass
                         else:
                             layer_one_g = nx.Graph()
@@ -125,8 +126,10 @@ class Graph :
                             if i not in interconnected_nodes:
                                 interconnected_nodes.append(i)
                     interconnected_g = nx.Graph()
+                    combined_g = nx.Graph()
                     interconnected_g = self.add_node( G = interconnected_g , nodes_to_add = interconnected_nodes )
-                    if just_interconnect_for_nx_graph or combine_layer_one_with_layer_two_edges_with_no_between:
+                    combined_g = self.add_node( G = combined_g , nodes_to_add = interconnected_nodes )
+                    if just_interconnect_for_nx_graph or combine_layers_no_self_layer:
                         pass
                     else:
                         layer_one_node = pd.Series(layer_one_node_temp).unique()
@@ -137,41 +140,47 @@ class Graph :
                         layer_two_g = self.add_node( G = layer_two_g , nodes_to_add = layer_two_node ) 
             else:
                 g = self.create()
-        for edge in layer_one_links:
-            edgeSource = edge[0]
-            edgeTarget = edge[1]
-            if self.nx_use == True :
-                interconnected_g.add_edge(edgeSource, edgeTarget)
-                if just_interconnect_for_nx_graph or combine_layer_one_with_layer_two_edges_with_no_between:
-                    pass
+        
+        if combine_layers_no_self_layer:
+            pass
+        else:
+            for edge in layer_one_links:
+                edgeSource = edge[0]
+                edgeTarget = edge[1]
+                if self.nx_use == True :
+                    interconnected_g.add_edge(edgeSource, edgeTarget)
+                    if just_interconnect_for_nx_graph :
+                        pass
+                    else:
+                        layer_one_g.add_edge(edgeSource, edgeTarget)
                 else:
-                    layer_one_g.add_edge(edgeSource, edgeTarget)
-            else:
-                g[ edgeSource, edgeTarget, self.layer_one_name , self.layer_one_name ] = 1
-        for edge in layer_two_links:
-            edgeSource = edge[0]
-            edgeTarget = edge[1]
-            if self.nx_use == True :
-                interconnected_g.add_edge(edgeSource, edgeTarget)
-                if just_interconnect_for_nx_graph or combine_layer_one_with_layer_two_edges_with_no_between :
-                    pass
+                    g[ edgeSource, edgeTarget, self.layer_one_name , self.layer_one_name ] = 1
+            for edge in layer_two_links:
+                edgeSource = edge[0]
+                edgeTarget = edge[1]
+                if self.nx_use == True :
+                    interconnected_g.add_edge(edgeSource, edgeTarget)
+                    if just_interconnect_for_nx_graph :
+                        pass
+                    else:
+                        layer_two_g.add_edge(edgeSource, edgeTarget)
                 else:
-                    layer_two_g.add_edge(edgeSource, edgeTarget)
-            else:
-                g[ edgeSource, edgeTarget, self.layer_two_name, self.layer_two_name ] = 1
+                    g[ edgeSource, edgeTarget, self.layer_two_name, self.layer_two_name ] = 1
+        
         for edge in Interconnected_links:
             edgeSource = edge[0]
             edgeTarget = edge[1]
             if self.nx_use == True :
-                if combine_layer_one_with_layer_two_edges_with_no_between :
-                    combine_with_no_between_g = interconnected_g.copy()
-                    continue
-                interconnected_g.add_edge(edgeSource, edgeTarget)
+                if combine_layers_no_self_layer :
+                    combined_g.add_edge(edgeSource, edgeTarget)
+                elif just_interconnect_for_nx_graph:
+                    interconnected_g.add_edge(edgeSource, edgeTarget)
             else:
                 g[edgeSource, edgeTarget, self.layer_one_name, self.layer_two_name ] = 1        
+        
         if self.nx_use == True :
-            if combine_layer_one_with_layer_two_edges_with_no_between :
-                return combine_with_no_between_g
+            if combine_layers_no_self_layer :
+                return combined_g
             elif just_interconnect_for_nx_graph == True :
                 return interconnected_g
             else:
@@ -189,7 +198,7 @@ class Graph :
         sleep(1)
         print( " the defult value for return_Graph_object is False ")
         self.draw(G, layout = 'fr',layergap=2.5, layershape= 'circle',
-                 nodeLabelRule = {} , show = True , alignedNodes = False, layerPadding = 0.1 )
+                    nodeLabelRule = {} , show = True , alignedNodes = False, layerPadding = 0.1 )
         if return_Graph_object == True :
             return G
 
