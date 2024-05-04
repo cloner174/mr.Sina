@@ -1,9 +1,9 @@
-# mrSina
+# mr.Sina
 A project !
 
 Multilayer Network Analysis
 
-Introduction
+## Introduction
 
 This repository is designed for analyzing and visualizing multilayer networks. It supports a range of functionalities from data preprocessing to complex network analysis and visualization.
 Installation
@@ -16,48 +16,74 @@ And Activate it :
 
     source .graph/bin/activate
 
+## **Attention**
+
+##### DO NOT RUN THIS if YOU ARE USING Google-Colab !!
+
+
 then you can run the command below to install the dependencies :
 
     pip install -r requirements.txt
 
 This will install all the required Python packages as listed in the requirements.txt file.
 
-* Structure
+## **Attention**
 
-    Archive/: Contains historical data and figures for reference.
-    docs/: Documentation and manuscripts related to the project.
-    input/: Input data files for processing.
-    main/: Core Python scripts and modules for the project.
-    output/: Generated output, including processed data and figures.
-    Rside/: R scripts for data preprocessing.
-    scripts/: Additional utility scripts.
+##### DO NOT RUN The Line Above if YOU ARE USING Google-Colab !!
 
-* Key files:
 
-    index.ipynb: Jupyter notebook demonstrating example usages of the library.
-    .gitignore: Specifies files and directories to be ignored by version control.
-    LICENSE: The full text of the license governing this project.
-    README.md: An overview of the project for users and contributors.
-    requirements.txt: Lists all the dependencies for the project.
 
-Usage
+# How to Use ?
 
 The project is primarily used through Jupyter notebooks, such as index.ipynb. Open this notebook in a Jupyter environment:
 
     jupyter notebook index.ipynb
 
-Data
+### The Recommended way is to use Google Colab or Visual Studio Code(VS code) if you are prefer use it locally.
+#### But Don't Forget, If you are using Colab, DO NOT RUN The pip install -r requirements.txt Command!
+You Can Download one of ( index or index2 or index4.3.1 or index6.0.1 ) and then Open Colab in another tab; You can use the Upload Option on Colab to get the main script ready to go!
 
-Data files are stored in input/ and are processed by scripts in Rside/. The R scripts like link_dataPrepare.R are used to prepare the data for analysis.
+### Structure
 
-Output
+    Archive/: Contains historical data and figures for reference.
 
-The output from analyses and scripts will be located in the output/ directory. This includes CSV files and visualizations in various formats.
+    docs/: Documentation and manuscripts related to the project.
+
+    input/: Input data files for processing.
+
+    main/: Core Python scripts and modules for the project.
+
+    output/: Generated output, including processed data and figures.
+
+    Rside/: R scripts for data preprocessing.
+
+    scripts/: Additional utility scripts.
+
+### Key files:
+
+    index.ipynb: Jupyter notebook demonstrating example usages of the library.
+
+    .gitignore: Specifies files and directories to be ignored by version control.
+
+    LICENSE: The full text of the license governing this project.
+
+    README.md: An overview of the project for users and contributors.
+
+    requirements.txt: Lists all the dependencies for the project.
+    **DO NOT RUN THIS if YOU ARE USING Google-Colab !!**
+
+### Data :
+
+    Data files are stored in input/ and are processed by scripts in Rside/. The R scripts like link_dataPrepare.R are used to prepare the data for analysis.
+
+### Output :
+
+    The output from analyses and scripts will be located in the output/ directory. This includes CSV files and visualizations in various formats.
 
 
 # DataHandle Class Documentation
 
-Introduction
+### Introduction :
 
 The DataHandle class is part of a Python module that facilitates the handling and manipulation of network data for multilayer network analysis. This class provides methods for initializing data, identifying key attributes, and modifying network links based on node classifications.
 Class Definition
@@ -71,7 +97,7 @@ Class Definition
                     layer_two_name:str='Publishers'):
         # Initialization and instance variables setup
 
-Initialization
+### Initialization :
 
 The *__init__* method initializes the DataHandle object with dictionaries representing the links and nodes of a network, as well as optional names for two types of network layers.
 
@@ -82,7 +108,7 @@ The *__init__* method initializes the DataHandle object with dictionaries repres
     layer_one_name: The name for the first layer of nodes (default is 'Advertisers').
     layer_two_name: The name for the second layer of nodes (default is 'Publishers').
 
-Method: *initial_keys*
+#### Method: *initial_keys*
 
     This method processes the keys from the node and link data to identify relevant attributes such as node IDs and colors, and classifies nodes into two categories based on their names.
 * Parameters:
@@ -94,7 +120,7 @@ Method: *initial_keys*
 
     Sets internal attributes used to identify node and edge properties.
 
-Method: *initial_data*
+#### Method: *initial_data*
 
 Prepares the data by using key labels to classify nodes and validate the structure of the network data.
 * Parameters:
@@ -110,7 +136,7 @@ Prepares the data by using key labels to classify nodes and validate the structu
     Throws KeyError if labels are missing.
     Throws ValueError if nodes lists are not provided or are not lists.
 
-Method: *modify_links*
+#### Method: *modify_links*
 
 Reclassifies the links into categories based on the node types they connect (i.e., within layer one, within layer two, or interconnecting).
 * Parameters:
@@ -132,11 +158,11 @@ Reclassifies the links into categories based on the node types they connect (i.e
 
 # Graph Class Documentation
 
-Introduction
+## Introduction :
 
 The Graph class encapsulates functionalities for constructing, modifying, and visualizing single-layer and multilayer network graphs. It provides an interface for handling network data, adding nodes and links, and generating visual representations of the network structure.
 
-Class Definition
+## Class Definition
 
 
     class Graph:
@@ -145,16 +171,16 @@ Class Definition
                      layer_two_name: str):
         # Initialization and instance variables setup
 
-Initialization
+## Initialization :
 
 The *__init__* method sets up a Graph instance with names for two distinct layers within the network.
 
-* Parameters:
+### Parameters:
 
     layer_one_name: The name identifier for the first layer in the network.
     layer_two_name: The name identifier for the second layer in the network.
 
-Method: *create*
+#### Method: *create*
 
 Initializes a new graph object either as a NetworkX graph or a MultilayerNetwork object.
 * Parameters:
@@ -167,7 +193,7 @@ Initializes a new graph object either as a NetworkX graph or a MultilayerNetwork
 
     A NetworkX graph or a MultilayerNetwork object.
 
-Method: *add_node*
+#### Method: *add_node*
 
 Adds nodes to a NetworkX graph. Not applicable for MultilayerNetwork graphs, as nodes are added with the add_links method.
 * Parameters:
@@ -180,7 +206,7 @@ Adds nodes to a NetworkX graph. Not applicable for MultilayerNetwork graphs, as 
 
     A NetworkX graph with the new nodes added.
 
-Method: *add_links*
+#### Method: *add_links*
 
 Adds edges to the graph based on the specified links for each layer and the interconnections.
 * Parameters:
@@ -195,7 +221,7 @@ Adds edges to the graph based on the specified links for each layer and the inte
 
     A tuple of NetworkX graph objects representing the two layers and their interconnections if nx_use is True; otherwise, a MultilayerNetwork graph.
 
-Method: *show*
+#### Method: *show*
 
 Visualizes the graph using the specified layout parameters.
 * Parameters:
